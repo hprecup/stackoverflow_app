@@ -8,11 +8,14 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface AnswerService {
+
+    ResponseEntity<Answer> getAnswer(Long id);
+
     List<Answer> getAnswers();
 
     ResponseEntity<Answer> createAnswer(AnswerDTO newAnswer);
 
     ResponseEntity<Answer> updateAnswer(Long id, AnswerDTO updatedAnswer);
 
-    ResponseEntity<String> deleteAnswer(Long id);
+    ResponseEntity<Answer> deleteAnswer(Long id);
 }

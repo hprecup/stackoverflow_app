@@ -20,6 +20,11 @@ import java.util.Optional;
 public class QuestionController {
     private QuestionService questionService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Question> getQuestion(@PathVariable Long id){
+        return questionService.getQuestion(id);
+    }
+
     @GetMapping
     public List<Question> getAllQuestions(){
         return questionService.getAllQuestions();
@@ -30,14 +35,14 @@ public class QuestionController {
         return questionService.createQuestion(newQuestion);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Question> updateQuestion(@PathVariable Long id,
                                                    @Valid @RequestBody QuestionDTO updatedQuestion){
         return questionService.updateQuestion(id, updatedQuestion);
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteQuestion(@PathVariable Long id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Question> deleteQuestion(@PathVariable Long id){
         return questionService.deleteQuestion(id);
     }
 }

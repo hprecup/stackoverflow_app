@@ -16,6 +16,11 @@ import java.util.List;
 public class AnswerController {
     private AnswerService answerService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Answer> getAnswer(@PathVariable Long id){
+        return answerService.getAnswer(id);
+    }
+
     @GetMapping
     public List<Answer> getAnswers(){
         return answerService.getAnswers();
@@ -26,13 +31,13 @@ public class AnswerController {
         return answerService.createAnswer(newAnswer);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Answer> updateAnswer(@PathVariable Long id, @Valid @RequestBody AnswerDTO updatedAnswer){
         return answerService.updateAnswer(id, updatedAnswer);
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteAnswer(@PathVariable Long id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Answer> deleteAnswer(@PathVariable Long id){
         return answerService.deleteAnswer(id);
     }
 }

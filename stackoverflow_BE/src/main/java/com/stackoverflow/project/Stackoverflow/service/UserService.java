@@ -5,9 +5,10 @@ import com.stackoverflow.project.Stackoverflow.model.User;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
+
+    ResponseEntity<User> getUser(Long id);
 
     List<User> getAllUsers();
 
@@ -15,5 +16,5 @@ public interface UserService {
 
     ResponseEntity<User> updateUser(Long id, UserDTO UpdatedUser);
 
-    ResponseEntity<String> deleteUser(Long id);
+    ResponseEntity<User> deleteUser(Long id);
 }

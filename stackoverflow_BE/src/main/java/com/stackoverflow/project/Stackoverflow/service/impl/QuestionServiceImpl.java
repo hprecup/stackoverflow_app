@@ -22,6 +22,14 @@ public class QuestionServiceImpl implements QuestionService {
     private UserRepository userRepository;
     private QuestionMapper questionMapper;
 
+    public ResponseEntity<Question> getQuestion(Long id){
+        Optional<Question> retrievedQuestion = questionRepository.findById(id);
+        if(!retrievedQuestion.isEmpty()){
+            return new ResponseEntity(retrievedQuestion.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity(null, HttpStatus.NOT_FOUND);
+    }
+
     public List<Question> getAllQuestions() {
         return questionRepository.findAll();
     }
@@ -49,8 +57,12 @@ public class QuestionServiceImpl implements QuestionService {
         return new ResponseEntity(null, HttpStatus.NO_CONTENT);
     }
 
-    public ResponseEntity<String> deleteQuestion(Long id) {
-        questionRepository.deleteById(id);
-        return new ResponseEntity("The question with id: "+ id +"has been deleted if existed", HttpStatus.OK);
+    public ResponseEntity<Question> deleteQuestion(Long id) {
+        Optional<Question> retrievedQuestion = questionRepository.findById(id);
+        if(!retrievedQuestion.isEmpty()) {
+            questionRepository.deleteById(id);
+            return new ResponseEntity(retrievedQuestion.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity(null, HttpStatus.NOT_FOUND);
     }
 }

@@ -9,11 +9,13 @@ import java.util.List;
 
 public interface QuestionService{
 
+    ResponseEntity<Question> getQuestion(Long id);
+
     List<Question> getAllQuestions();
 
     ResponseEntity<Question> createQuestion(QuestionDTO newQuestion);
 
     ResponseEntity<Question> updateQuestion(Long id, QuestionDTO updatedQuestion);
 
-    ResponseEntity<String> deleteQuestion(Long id);
+    ResponseEntity<Question> deleteQuestion(Long id);
 }

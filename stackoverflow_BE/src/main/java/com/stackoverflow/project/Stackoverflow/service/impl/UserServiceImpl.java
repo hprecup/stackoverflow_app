@@ -24,6 +24,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
+    public ResponseEntity<User> getUser(Long id) {
+        Optional<User> retrievedUser = userRepository.findById(id);
+        if(!retrievedUser.isEmpty()){
+            return new ResponseEntity(retrievedUser.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity(null, HttpStatus.NOT_FOUND);
+    }
+
     public ResponseEntity<User> createUser(UserDTO userDTO){
         User newUser = new User();
         userMapper.userDTOtoUser(newUser, userDTO);
@@ -45,8 +53,12 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity(null, HttpStatus.NO_CONTENT);
     }
 
-    public ResponseEntity<String> deleteUser(Long id){
-        userRepository.deleteById(id);
-        return new ResponseEntity("The user with id: "+ id +"has been deleted if existed", HttpStatus.OK);
+    public ResponseEntity<User> deleteUser(Long id){
+        Optional<User> retrievedUser = userRepository.findById(id);
+        if(!retrievedUser.isEmpty()){
+            userRepository.deleteById(id);
+            return new ResponseEntity(retrievedUser.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity(null, HttpStatus.NOT_FOUND);
     }
 }

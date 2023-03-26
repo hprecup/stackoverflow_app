@@ -25,6 +25,14 @@ public class AnswerServiceImpl implements AnswerService {
     private UserRepository userRepository;
     private AnswerMapper answerMapper;
 
+    public ResponseEntity<Answer> getAnswer(Long id){
+        Optional<Answer> retrievedAnswer = answerRepository.findById(id);
+        if(!retrievedAnswer.isEmpty()){
+            return new ResponseEntity(retrievedAnswer.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity(null, HttpStatus.NOT_FOUND);
+    }
+
     public List<Answer> getAnswers() {
         return answerRepository.findAll();
     }
@@ -57,8 +65,12 @@ public class AnswerServiceImpl implements AnswerService {
         return new ResponseEntity(null, HttpStatus.NOT_FOUND);
     }
 
-    public ResponseEntity<String> deleteAnswer(Long id) {
-        answerRepository.deleteById(id);
-        return new ResponseEntity("The answer with id: "+ id +"has been deleted if existed", HttpStatus.OK);
+    public ResponseEntity<Answer> deleteAnswer(Long id) {
+        Optional<Answer> retrievedAnswer = answerRepository.findById(id);
+        if(!retrievedAnswer.isEmpty()){
+            answerRepository.deleteById(id);
+            return new ResponseEntity(retrievedAnswer.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity(null, HttpStatus.NOT_FOUND);
     }
 }
