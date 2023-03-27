@@ -52,6 +52,7 @@ public class QuestionServiceImpl implements QuestionService {
         if(!questionToUpdate.isEmpty()){
             Question retrievedQuestion = questionToUpdate.get();
             questionMapper.questionDTOtoQuestion(retrievedQuestion, updatedQuestion);
+            questionRepository.save(retrievedQuestion);
             return new ResponseEntity(retrievedQuestion, HttpStatus.OK);
         }
         return new ResponseEntity(null, HttpStatus.NO_CONTENT);
