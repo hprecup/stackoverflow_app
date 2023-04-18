@@ -1,0 +1,142 @@
+mat-card{
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.3);
+  border-radius: 10px;
+  margin: auto;
+  width: 98%;
+  margin-bottom: 10px;
+}
+
+div{
+  border: none;
+}
+
+.like-buttons {
+  text-align: end;
+  width: 100%;
+}
+
+button {
+  background-color: white;
+}
+
+.tag {
+  background-color: lightgray;
+  font-size: 15px;
+  line-height: 20px;
+  height: auto;
+  width: auto;
+  margin-right: 5px;
+}
+
+.vote {
+  margin: 0 5px 5px 0;
+}
+
+.vote-count {
+  margin-right: 30px;
+  font-size: 12px;
+}
+
+.filter-bar {
+  position: sticky;
+  top: 62px;
+  z-index: 1000;
+  height: 60px;
+  width: 98%;
+  margin: auto;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+.filters{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  vertical-align: auto;
+}
+
+.input{
+  margin: 20px -5px -5px -5px;
+}
+
+.filter p{
+  margin: 10px 10px 0px 10px;
+}
+
+mat-form-field {
+  transform: scale(0.8);
+  font-size: 20px;
+}
+
+.add-question-button {
+  display: flex;
+  flex-direction: row-reverse;
+  padding-right: 10px;
+}
+
+.half-width{
+  width: 50%;
+}
+
+textarea::-webkit-scrollbar{
+  display: none;
+}
+
+.question-form{
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  margin: auto;
+}
+
+.add-question-button {
+  margin: auto;
+}
+
+.question-insert{
+  margin: auto;
+  width: 97%;
+  margin-top: 5px;
+}
+
+.error{
+  color: red;
+  text-align: center;
+}
+
+.tag-form-field{
+  width: 100%;
+  align-items: end;
+}
+
+.tag-select{
+  width: 80%;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+}
+
+.plus-button{
+  width:10%;
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+  padding-bottom: 17px;
+}
+
+.tag-insert{
+  width: 80%;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.insert-btn {
+  margin-bottom: 20px;
+}
+
+.question-card:hover {
+  cursor: pointer;
+}

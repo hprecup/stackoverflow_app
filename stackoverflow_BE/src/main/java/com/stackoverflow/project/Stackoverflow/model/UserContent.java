@@ -29,6 +29,9 @@ public abstract class UserContent {
     @Column(name = "creation_date")
     private LocalDateTime creationDateTime;
 
+    @Column(name = "vote_count")
+    private Long voteCount;
+
 /*    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;*/

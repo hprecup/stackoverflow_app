@@ -1,0 +1,18 @@
+<mat-sidenav-container>
+  <mat-sidenav mode = "side" opened>
+    <h1 routerLink="login" routerLinkActive="active-link"><i class="bi bi-stack-overflow"></i>Stackoverflow</h1>
+    <mat-nav-list>
+      <mat-list-item routerLink="users" routerLinkActive="active-link">Users</mat-list-item>
+      <mat-list-item routerLink="questions" routerLinkActive="active-link">Questions</mat-list-item>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+
+    <app-search-bar></app-search-bar>
+
+    <router-outlet></router-outlet>
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>
+<!-- https://stackoverflow.com/questions/52426986/how-to-highlight-selected-mat-list-item-with-color-in-angular/52427289#52427289 -->

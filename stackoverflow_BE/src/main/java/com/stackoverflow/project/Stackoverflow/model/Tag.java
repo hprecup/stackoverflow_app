@@ -1,14 +1,18 @@
 package com.stackoverflow.project.Stackoverflow.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 @Entity
 @Table(name = "tags")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Tag {
 
     @Id
@@ -20,5 +24,5 @@ public class Tag {
     private String tagName;
 
     @OneToMany(mappedBy = "tag", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<QuestionTag> tags;
+    private List<QuestionTag> tags = new ArrayList<>();
 }

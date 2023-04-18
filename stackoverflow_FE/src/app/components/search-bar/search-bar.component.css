@@ -1,0 +1,23 @@
+mat-toolbar {
+  background-color:tan;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: 60px;
+  border-radius: 10px;
+  width: 98%;
+  margin: auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.3);
+}
+
+input{
+  border-radius: 5px;
+  border: 10px;
+}
+
+button{
+  margin-left: 10px;
+}
+

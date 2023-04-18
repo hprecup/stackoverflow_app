@@ -4,7 +4,6 @@ import com.stackoverflow.project.Stackoverflow.dto.UserDTO;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import com.stackoverflow.project.Stackoverflow.model.User;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.stackoverflow.project.Stackoverflow.service.UserService;
@@ -14,6 +13,7 @@ import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/user")
 public class UserController {
     private UserService userService;
@@ -30,7 +30,6 @@ public class UserController {
 
     @PostMapping()
     public ResponseEntity<User> createUser(@Valid @RequestBody UserDTO newUser){
-        //return new ResponseEntity(userService.createUser(newUser), HttpStatus.CREATED);
         return userService.createUser(newUser);
     }
 

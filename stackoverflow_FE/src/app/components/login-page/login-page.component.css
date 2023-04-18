@@ -1,0 +1,43 @@
+mat-card{
+  height: 400px;
+  width: 400px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.3);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-top: -200px;
+  margin-left: -200px;
+}
+
+mat-card-header {
+  justify-content: center;
+}
+
+mat-card-content {
+  padding: 0px 20px 20px 20px;
+  margin: auto;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.form-fields {
+  width: 80%;
+  margin: auto;
+  text-align: center;
+}
+
+.login-button {
+  font-size: 20px;
+}
+
+h1{
+  font-size: 25px;
+  background-color: orange;
+  padding: 5px;
+}
+
+a {
+  text-decoration: none;
+}

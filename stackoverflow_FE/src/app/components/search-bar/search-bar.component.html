@@ -1,0 +1,6 @@
+<mat-toolbar>
+  <!-- <span>My Application</span> -->
+  <input matInput placeholder="Search for questions" (keyup.enter)="searchQuestion(searchInput.value)" #searchInput [(ngModel)]="searchString">
+  <!-- <input type="submit" value="Search"> -->
+  <button mat-raised-button (click)="searchQuestion(searchInput.value)">Search</button>
+</mat-toolbar>

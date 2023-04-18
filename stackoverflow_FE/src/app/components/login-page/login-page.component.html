@@ -1,0 +1,27 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>
+        <h1><i class="bi bi-stack-overflow"></i>Stackoverflow</h1>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="form-fields">
+      <mat-form-field appearance="fill">
+        <mat-label>Username</mat-label>
+        <input matInput>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="hidePassword ? 'password' : 'text'">
+        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+      <a routerLink="/main" routerLinkActive="active-link">
+        <button class="login-button" mat-raised-button color="primary">Login</button>
+      </a>
+    </div>
+  </mat-card-content>
+</mat-card>
+<!-- <a routerLink="/main" routerLinkActive="active-link"><button mat-raised-button color="primary" (click)="handleClick()">Intra-n pizda matii</button></a> -->

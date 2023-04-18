@@ -1,6 +1,8 @@
 package com.stackoverflow.project.Stackoverflow.controller;
 
 import com.stackoverflow.project.Stackoverflow.dto.AnswerDTO;
+import com.stackoverflow.project.Stackoverflow.dto.InsertAnswerDTO;
+import com.stackoverflow.project.Stackoverflow.dto.RequestAnswerDTO;
 import com.stackoverflow.project.Stackoverflow.model.Answer;
 import com.stackoverflow.project.Stackoverflow.service.AnswerService;
 import jakarta.validation.Valid;
@@ -13,6 +15,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/answer")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AnswerController {
     private AnswerService answerService;
 
@@ -36,8 +39,18 @@ public class AnswerController {
         return answerService.updateAnswer(id, updatedAnswer);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Answer> deleteAnswer(@PathVariable Long id){
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<RequestAnswerDTO> deleteAnswer(@PathVariable Long id){
         return answerService.deleteAnswer(id);
+    }
+
+    @PostMapping("/insert/{questionId}")
+    public RequestAnswerDTO insertAnswer(@PathVariable Long questionId, @RequestBody InsertAnswerDTO insertAnswerDTO) {
+        return answerService.insertAnswer(questionId, insertAnswerDTO);
+    }
+
+    @PutMapping("/edit/{id}")
+    public RequestAnswerDTO editAnswer(@PathVariable Long id, @RequestBody String newText) {
+        return answerService.editAnswer(id, newText);
     }
 }

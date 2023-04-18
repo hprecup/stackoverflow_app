@@ -20,6 +20,10 @@ public class UserDTO {
     @NotBlank(message = "last name must not be blank")
     private String lastName;
 
+    @NotNull(message = "username must not be null")
+    @NotBlank(message = "username must not be blank")
+    private String username;
+
     @NotNull(message = "email must not be null")
     @NotBlank(message = "email must not be blank")
     @Email(message = "email must be a well-formed address")

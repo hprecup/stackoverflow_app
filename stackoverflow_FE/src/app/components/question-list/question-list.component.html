@@ -1,0 +1,126 @@
+<mat-card class="filter-bar filters">
+  <div class="half-width filters">
+    <div>
+      <p>
+        <mat-checkbox [formControl]="disableSelect">Only my questions</mat-checkbox>
+      </p>
+    </div>
+
+    <div class="input">
+      <mat-form-field>
+        <mat-label>Filter by tag</mat-label>
+        <mat-select [disabled]="disableSelect.value" (selectionChange)="filterByTag($event)">
+          <mat-option *ngFor="let tag of filterTags" value={{tag}} selected>{{tag}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="input">
+      <mat-form-field>
+        <mat-label>Filter by user</mat-label>
+        <mat-select [disabled]="disableSelect.value">
+          <mat-option value="" selected></mat-option>
+          <mat-option value="option1">User 1</mat-option>
+          <mat-option value="option2">User 2</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="add-question-button half-width">
+    <button mat-raised-button (click)="toggleQuestionInsert()">Add Question</button>
+  </div>
+
+</mat-card>
+
+<div *ngIf="enableQuestionInsert" class="question-insert">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        Insert question
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content class="question-form">
+      <mat-form-field>
+        <mat-label>Title</mat-label>
+        <input #questionTitle matInput required placeholder="Title">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Text</mat-label>
+        <textarea matInput placeholder="Text..."
+                  cdkTextareaAutosize
+                  cdkAutosizeMinRows="1"
+                  cdkAutosizeMaxRows="8"
+                  required #questionText></textarea>
+      </mat-form-field>
+
+      <p class = "tag-error">......Add image component</p>
+
+      <!-- <mat-form-field appearance="fill">
+        <mat-label>Tags</mat-label>
+        <mat-select [formControl]="tagsFC" multiple>
+          <mat-option *ngFor="let tag of tags" [value]="tag.id">{{tag.tagName}}</mat-option>
+        </mat-select>
+      </mat-form-field> -->
+
+      <div class="tag-select">
+        <div style="width:90%">
+          <mat-form-field class="tag-form-field">
+            <mat-label>Tags</mat-label>
+            <mat-select multiple required [(ngModel)]="selectedTags">
+              <mat-option *ngFor="let tag of tags" [value]="tag.id">{{tag.tagName}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="plus-button">
+          <button mat-raised-button (click)="toggleTagInsert()">New</button>
+        </div>
+      </div>
+
+      <div class="tag-insert" *ngIf="enableInsertTag">
+        <mat-form-field>
+          <mat-label>New Tag</mat-label>
+          <input #tagInput matInput placeholder="Tag name" required>
+        </mat-form-field>
+
+        <button mat-raised-button (click)="addTag(tagInput.value)" class="insert-btn">Insert</button>
+      </div>
+
+      <p *ngIf="!validTag" class="error">Tag name incorrect or it already exists !</p>
+      <p *ngIf="!validNewQuestion" class="error">Fields from above must be completed !</p>
+
+      <div class="add-question-button">
+        <button mat-raised-button (click)="insertQuestion(questionTitle.value, questionText.value)">Submit</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div *ngFor="let question of questions">
+    <mat-card routerLink="./{{question.id}}" routerLinkActive="active-link" class="question-card">
+      <mat-card-header>
+        <mat-card-title-group>
+          <mat-card-title>
+            <a routerLink="./{{question.id}}" routerLinkActive="active-link">{{question.title}}</a>
+          </mat-card-title>
+          <mat-card-subtitle>
+            <p>{{question.user.username}}</p>
+            <span style="font-style: italic">{{question.creationDateTime | date:'medium'}}</span>
+          </mat-card-subtitle>
+          <img mat-card-sm-image src="assets/images/demo_photo.jpg" >
+        </mat-card-title-group>
+      </mat-card-header>
+
+      <mat-card-content>
+        {{question.text}}
+      </mat-card-content>
+
+      <mat-card-actions>
+        <div *ngFor="let tag of question.tagNames">
+          <button mat-button class="tag">{{tag}}</button>
+        </div>
+      </mat-card-actions>
+    </mat-card>
+</div>

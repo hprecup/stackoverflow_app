@@ -1,0 +1,160 @@
+.questionCard{
+  /* margin: 10px 10px 10px 10px; */
+  margin: 0 auto;
+  width: 98%;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.3);
+}
+
+.tags{
+  width: 100%;
+}
+
+mat-card {
+  border-radius: 10px;
+}
+
+div{
+  border: none;
+}
+
+.like-buttons {
+  text-align: end;
+  width: 100%;
+}
+
+button {
+  background-color: white;
+}
+
+.tag {
+  background-color: lightgray;
+  font-size: 15px;
+  line-height: 20px;
+  height: auto;
+  width: auto;
+}
+
+.vote {
+  margin: 0 5px 5px 0;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.vote-count {
+  margin-right: 30px;
+  font-size: 12px;
+  height: 12px;
+}
+
+.filter {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  vertical-align: auto;
+  position: sticky;
+  top: 60px;
+  z-index: 1000;
+  height: 60px;
+}
+
+.filter div{
+  margin: 20px -5px -5px -5px;
+}
+
+.filter p{
+  margin: 10px 10px 0px 10px;
+}
+
+mat-form-field {
+  transform: scale(0.8);
+  font-size: 20px;
+}
+
+subtitle {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit {
+  margin: 0 5px 0 5px;
+}
+
+.question-answer-text {
+  width: 70%;
+  border: white;
+  overflow-y: scroll;
+  background-color: white;
+}
+
+textarea::-webkit-scrollbar{
+  display: none;
+}
+
+.edit-question{
+  border: black;
+}
+
+.answerCard{
+  margin: 5px 25px 5px 25px;
+}
+
+.add-answer {
+  background-color:burlywood;
+}
+
+.answer-form{
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  margin: auto;
+}
+
+.insert-answer-card {
+  /* padding: 0 10px; */
+  margin: auto;
+  width: 98%;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.answer-button {
+  width: 20%;
+  margin: auto;
+}
+
+.confirm-button{
+  margin: 0 0 0 10px;
+}
+
+.answer-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  /* vertical-align: auto; */
+}
+
+.answer-textarea {
+  width: 60%;
+}
+
+.answer-textarea textarea {
+  border: white;
+  overflow-y: scroll;
+  background-color: white;
+  width: 100%;
+}
+
+.answer-img {
+  width: 40%;
+}
+
+.answer-img img {
+  margin: auto;
+  display: block;
+}

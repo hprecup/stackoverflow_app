@@ -1,0 +1,36 @@
+mat-sidenav-container {
+  height: 100%;
+}
+
+mat-sidenav {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background-color: tan;
+  width: 250px;
+  margin: 5px 5px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.3);
+}
+
+mat-sidenav-container {
+  padding-right: 20px;
+  background-color: rgb(225, 225, 225);
+}
+
+mat-list-item {
+  text-align: center;
+  background: rgba(245, 245, 245, 0.5);
+  margin: 5px;
+  border-radius: 10px;
+  width: 95%;
+}
+
+h1 {
+  background-color: orange;
+  border-radius: 5px;
+}
+
+h1:hover {
+  background-color: darkorange;
+  cursor: pointer;
+}

@@ -1,6 +1,8 @@
 package com.stackoverflow.project.Stackoverflow.service.impl;
 
 import com.stackoverflow.project.Stackoverflow.dto.AnswerDTO;
+import com.stackoverflow.project.Stackoverflow.dto.InsertAnswerDTO;
+import com.stackoverflow.project.Stackoverflow.dto.RequestAnswerDTO;
 import com.stackoverflow.project.Stackoverflow.mapper.AnswerMapper;
 import com.stackoverflow.project.Stackoverflow.model.Answer;
 import com.stackoverflow.project.Stackoverflow.model.Question;
@@ -65,12 +67,46 @@ public class AnswerServiceImpl implements AnswerService {
         return new ResponseEntity(null, HttpStatus.NOT_FOUND);
     }
 
-    public ResponseEntity<Answer> deleteAnswer(Long id) {
+    public ResponseEntity<RequestAnswerDTO> deleteAnswer(Long id) {
         Optional<Answer> retrievedAnswer = answerRepository.findById(id);
         if(!retrievedAnswer.isEmpty()){
+            RequestAnswerDTO requestAnswer = new RequestAnswerDTO();
+            answerMapper.answerToRequestAnswerDTO(requestAnswer, retrievedAnswer.get());
             answerRepository.deleteById(id);
-            return new ResponseEntity(retrievedAnswer.get(), HttpStatus.OK);
+            return new ResponseEntity(requestAnswer, HttpStatus.OK);
         }
         return new ResponseEntity(null, HttpStatus.NOT_FOUND);
     }
+
+
+    public RequestAnswerDTO insertAnswer(Long questionId, InsertAnswerDTO insertAnswerDTO) {
+        Answer answer = new Answer();
+        answerMapper.insertAnswerDTOtoAnswer(answer, insertAnswerDTO);
+        Optional<User> optionalUser = userRepository.findById(insertAnswerDTO.getAuthorId());
+        User retrievedUser = optionalUser.get();
+        Optional<Question> optionalQuestion = questionRepository.findById(questionId);
+        Question retrievedQuestion = optionalQuestion.get();
+        answer.setQuestion(retrievedQuestion);
+        answer.setUser(retrievedUser);
+        answer.setCreationDateTime(LocalDateTime.now());
+        answer.setVoteCount(Long.valueOf(0));
+        answerRepository.save(answer);
+        RequestAnswerDTO requestAnswer = new RequestAnswerDTO();
+        answerMapper.answerToRequestAnswerDTO(requestAnswer, answer);
+        return requestAnswer;
+    }
+
+    public RequestAnswerDTO editAnswer(Long id, String newText) {
+        Optional<Answer> optionalAnswer = answerRepository.findById(id);
+        Answer retrievedAnswer = optionalAnswer.get();
+        if(! optionalAnswer.isEmpty()) {
+            retrievedAnswer.setText(newText);
+            answerRepository.save(retrievedAnswer);
+            RequestAnswerDTO requestAnswer = new RequestAnswerDTO();
+            answerMapper.answerToRequestAnswerDTO(requestAnswer, retrievedAnswer);
+            return requestAnswer;
+        }
+        return null;
+    }
+
 }

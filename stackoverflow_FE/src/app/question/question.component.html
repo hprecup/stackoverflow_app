@@ -1,0 +1,119 @@
+<div class="questionCard">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title-group>
+        <mat-card-title>{{question.title}}</mat-card-title>
+        <mat-card-subtitle>
+          <p>{{question.user.username}}</p>
+          <span style="font-style: italic">{{question.creationDateTime| date:'medium'}}</span>
+          <div class="tags" *ngFor="let tag of question.tagNames">
+            <button mat-button class="tag">{{tag}}</button>
+          </div>
+        </mat-card-subtitle>
+        <img mat-card-xl-image src="assets/images/demo_photo.jpg" >
+      </mat-card-title-group>
+    </mat-card-header>
+
+    <mat-card-content>
+      <textarea matInput
+                cdkTextareaAutosize
+                cdkAutosizeMinRows="1"
+                cdkAutosizeMaxRows="8"
+                disabled={{disableQuestionEditing}}
+                class = "question-answer-text"
+                [ngClass]="{'edit-question': !disableQuestionEditing}"
+                [(ngModel)] = "questionText"
+      >{{questionText}}</textarea>
+      <button mat-raised-button *ngIf="!disableQuestionEditing" (click)="editQuestion(questionText)" color="success" class="confirm-button">Confirm</button>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button class="edit add-answer" (click)="toggleAnswerInsert()">Add Answer</button>
+      <button mat-raised-button color="primary" class="edit" (click)="toggleQuestionEdit()">Edit</button>
+      <button mat-raised-button color="warn" class="edit" (click)="deleteQuestion()">Delete</button>
+      <div class="like-buttons">
+        <button mat-raised-button class="vote">
+          <mat-icon>thumb_up_alt</mat-icon>
+        </button>
+        <button mat-raised-button class="vote">
+          <mat-icon>thumb_down_alt</mat-icon>
+        </button>
+        <p class="vote-count">Vote count: {{question.voteCount}}</p>
+      </div>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<div class="insert-answer-card" *ngIf="enableAnswerInsert">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        Insert answer
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content class="answer-form">
+        <p>Add answer image...</p>
+
+        <mat-form-field>
+          <mat-label>Answer</mat-label>
+          <textarea matInput placeholder="Answer..."
+                    cdkTextareaAutosize
+                    cdkAutosizeMinRows="1"
+                    cdkAutosizeMaxRows="8"
+                    #answerText></textarea>
+        </mat-form-field>
+        <div class="answer-button">
+          <button mat-raised-button (click)="insertAnswer(answerText.value)">Submit</button>
+        </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div *ngFor="let answer of answers" class="answerCard">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title-group>
+        <p style="font-style: italic">{{answerDate | date:'medium'}}</p>
+        <!-- <mat-card-title>{{}}</mat-card-title> -->
+        <mat-card-subtitle>
+          {{answer.user.username}}
+        </mat-card-subtitle>
+        <!-- <img mat-card-lg-image src="assets/images/demo_photo.jpg" > -->
+      </mat-card-title-group>
+    </mat-card-header>
+
+    <mat-card-content class="answer-content">
+      <div class="answer-textarea">
+        <textarea matInput
+                  cdkTextareaAutosize
+                  disabled = {{disableAnswerEditing}}
+                  cdkAutosizeMinRows="1"
+                  cdkAutosizeMaxRows="8"
+                  disabled={{disableQuestionEditing}}
+                  #answerText
+        >
+          aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa{{answer.text}}
+        </textarea>
+        <button mat-raised-button *ngIf="!this.disableAnswerEditing" (click)="editAnswer(answerText.value, answer.id)">Confirm</button>
+      </div>
+      <div class="answer-img">
+        <img mat-card-lg-image src="assets/images/demo_photo.jpg">
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button color="primary" class="edit" (click)="toggleAnswerEdit()">Edit</button>
+      <button mat-raised-button color="warn" class="edit" (click)="deleteAnswer(answer.id)">Delete</button>
+      <div class="like-buttons">
+        <button mat-raised-button class="vote">
+          <mat-icon>thumb_up_alt</mat-icon>
+        </button>
+        <button mat-raised-button class="vote">
+          <mat-icon>thumb_down_alt</mat-icon>
+        </button>
+        <p class="vote-count">Vote count: {{answer.voteCount}}</p>
+      </div>
+    </mat-card-actions>
+  </mat-card>
+</div>
