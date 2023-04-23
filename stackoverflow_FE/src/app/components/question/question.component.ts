@@ -119,7 +119,10 @@ export class QuestionComponent implements OnInit{
   deleteAnswer(answerId: number) {
     this.answerService.deleteAnswer(answerId).subscribe(
       answer => {
-        this.answers = this.answers.filter(ans => !(JSON.stringify(answer) === JSON.stringify(ans)));
+        // console.log(this.answers)
+        //this.answers = this.answers.filter(ans => !(JSON.stringify(answer) === JSON.stringify(ans)));
+        this.answers = this.answers.filter(ans => answer.id !== ans.id);
+        // console.log(this.answers)
       }
     )
   }
