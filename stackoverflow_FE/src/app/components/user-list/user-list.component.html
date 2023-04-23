@@ -7,10 +7,11 @@
           Score: {{user.score}}
         </p>
         <mat-card-title>
-          <a>{{user.firstName}} {{user.lastName}}</a>
+          <a>{{user.username}}</a>
         </mat-card-title>
         <mat-card-subtitle>
-          <p>{{user.email}}</p>
+          <p style="margin-bottom: -5px;">{{user.email}}</p>
+          <span>{{user.firstName}} {{user.lastName}}</span>
         </mat-card-subtitle>
       </mat-card-title-group>
     </mat-card-header>

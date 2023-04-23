@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MaterialModule } from 'src/app/material/material.module';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { QuestionListComponent } from '../question-list/question-list.component';
-import { QuestionComponent } from 'src/app/question/question.component';
+import { QuestionComponent } from 'src/app/components/question/question.component';
 import { Routes, RouterModule } from '@angular/router';
 
 @Component({

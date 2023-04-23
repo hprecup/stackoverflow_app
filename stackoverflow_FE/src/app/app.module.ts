@@ -13,7 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { Routes, RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { QuestionListComponent } from './components/question-list/question-list.component';
-import { QuestionComponent } from './question/question.component';
+import { QuestionComponent } from './components/question/question.component';
 import { LoginPageComponent } from './components/login-page/login-page.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 

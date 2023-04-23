@@ -45,7 +45,15 @@ create table answers (
     vote_count bigint
 );
 
-insert into users values (1, "fname1", "lname1","username1", "user1@yahoo.com", "$2a$10$ERfv9A0s5giOwmDk1yieg.WgsTUG41PRMg2hRiFIkiDWmkH4z11vS", 0);
+create table roles (
+	id bigint primary key unique not null auto_increment,
+    role varchar(20) not null
+);
+
+insert into roles values (1, "USER");
+insert into roles values (2, "MODERATOR");
+
+insert into users values (1, "fname1", "lname1","username1", "user1@yahoo.com", "$2a$10$CfmIIsNTB7JR2bC/Mo9dxezfA2vT2e9K.RBiH1nyYXZ1vORMX9O8u", 0);
 insert into users values (2, "fname2", "lname2","username2", "user2@yahoo.com", "$2a$10$xuEhInb351D.TpKxQhbTUu5phytc1q9E8TYqJOmGwG3tMsOf3/jlq", 0);
 insert into users values (3, "fname1", "lname3","username3", "user3@yahoo.com", "$2a$10$xgnXPC7a0PFuYqIbswszj.n4hqT37WkWT31N3202/Chwa4ycJptpq", 0);
 

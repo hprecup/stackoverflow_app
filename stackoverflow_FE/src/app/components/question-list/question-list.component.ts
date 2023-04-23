@@ -132,7 +132,7 @@ export class QuestionListComponent implements OnInit{
   }
 
   insertQuestion(questionTitle: string, questionText: string){
-    if(questionTitle==='' || questionText==='' || this.selectedTags.length===0){
+    if(questionTitle.length === 0 || questionText.length === 0|| this.selectedTags.length===0){
       this.validNewQuestion = false;
     }
     else{

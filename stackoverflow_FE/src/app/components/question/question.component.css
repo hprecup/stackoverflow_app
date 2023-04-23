@@ -9,6 +9,8 @@
 
 .tags{
   width: 100%;
+  display: flex;
+  flex-direction: row;
 }
 
 mat-card {
@@ -30,10 +32,9 @@ button {
 
 .tag {
   background-color: lightgray;
-  font-size: 15px;
-  line-height: 20px;
-  height: auto;
-  width: auto;
+  font-size: 14px;
+  height: 20px;
+  margin-left: 8px;
 }
 
 .vote {
@@ -131,30 +132,30 @@ textarea::-webkit-scrollbar{
   margin: 0 0 0 10px;
 }
 
-.answer-content {
+.answer-question-content {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  /* align-items: center; */
   justify-content: center;
-  /* vertical-align: auto; */
 }
 
-.answer-textarea {
+.answer-question-textarea {
   width: 60%;
+  margin-top: 10px;
 }
 
-.answer-textarea textarea {
+.answer-question-textarea textarea {
   border: white;
   overflow-y: scroll;
   background-color: white;
   width: 100%;
 }
 
-.answer-img {
+.answer-question-img {
   width: 40%;
 }
 
-.answer-img img {
+.answer-question-img img {
   margin: auto;
   display: block;
 }

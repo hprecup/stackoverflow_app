@@ -2,29 +2,35 @@
   <mat-card>
     <mat-card-header>
       <mat-card-title-group>
+        <p style="font-style: italic">{{question.creationDateTime| date:'medium'}}</p>
         <mat-card-title>{{question.title}}</mat-card-title>
         <mat-card-subtitle>
           <p>{{question.user.username}}</p>
-          <span style="font-style: italic">{{question.creationDateTime| date:'medium'}}</span>
-          <div class="tags" *ngFor="let tag of question.tagNames">
-            <button mat-button class="tag">{{tag}}</button>
-          </div>
         </mat-card-subtitle>
-        <img mat-card-xl-image src="assets/images/demo_photo.jpg" >
       </mat-card-title-group>
     </mat-card-header>
+    <div class="tags">
+      <div *ngFor="let tag of question.tagNames">
+        <button mat-button class="tag">{{tag}}</button>
+      </div>
+    </div>
 
-    <mat-card-content>
-      <textarea matInput
-                cdkTextareaAutosize
-                cdkAutosizeMinRows="1"
-                cdkAutosizeMaxRows="8"
-                disabled={{disableQuestionEditing}}
-                class = "question-answer-text"
-                [ngClass]="{'edit-question': !disableQuestionEditing}"
-                [(ngModel)] = "questionText"
-      >{{questionText}}</textarea>
-      <button mat-raised-button *ngIf="!disableQuestionEditing" (click)="editQuestion(questionText)" color="success" class="confirm-button">Confirm</button>
+    <mat-card-content class="answer-question-content">
+      <div class="answer-question-textarea">
+        <!-- class = "question-answer-text" -->
+          <textarea matInput
+                  cdkTextareaAutosize
+                  cdkAutosizeMinRows="1"
+                  cdkAutosizeMaxRows="8"
+                  disabled={{disableQuestionEditing}}
+                  [ngClass]="{'edit-question': !disableQuestionEditing}"
+                  [(ngModel)] = "questionText"
+          >{{questionText}}</textarea>
+        <button mat-raised-button *ngIf="!disableQuestionEditing" (click)="editQuestion(questionText)" color="success" class="confirm-button">Confirm</button>
+      </div>
+      <div class="answer-question-img">
+        <img mat-card-xl-image src="assets/images/demo_photo.jpg" >
+      </div>
     </mat-card-content>
 
     <mat-card-actions>
@@ -83,8 +89,8 @@
       </mat-card-title-group>
     </mat-card-header>
 
-    <mat-card-content class="answer-content">
-      <div class="answer-textarea">
+    <mat-card-content class="answer-question-content">
+      <div class="answer-question-textarea">
         <textarea matInput
                   cdkTextareaAutosize
                   disabled = {{disableAnswerEditing}}
@@ -97,7 +103,7 @@
         </textarea>
         <button mat-raised-button *ngIf="!this.disableAnswerEditing" (click)="editAnswer(answerText.value, answer.id)">Confirm</button>
       </div>
-      <div class="answer-img">
+      <div class="answer-question-img">
         <img mat-card-lg-image src="assets/images/demo_photo.jpg">
       </div>
     </mat-card-content>
