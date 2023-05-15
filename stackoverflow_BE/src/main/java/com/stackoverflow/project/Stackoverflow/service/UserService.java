@@ -1,5 +1,6 @@
 package com.stackoverflow.project.Stackoverflow.service;
 
+import com.stackoverflow.project.Stackoverflow.dto.RequestUserDTO;
 import com.stackoverflow.project.Stackoverflow.dto.UserDTO;
 import com.stackoverflow.project.Stackoverflow.model.User;
 import org.springframework.http.ResponseEntity;
@@ -17,4 +18,6 @@ public interface UserService {
     ResponseEntity<User> updateUser(Long id, UserDTO UpdatedUser);
 
     ResponseEntity<User> deleteUser(Long id);
+
+    List<RequestUserDTO> getRequestUsers();
 }

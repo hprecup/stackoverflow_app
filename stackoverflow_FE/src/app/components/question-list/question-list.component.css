@@ -140,3 +140,21 @@ textarea::-webkit-scrollbar{
 .question-card:hover {
   cursor: pointer;
 }
+
+h2 {
+  text-align: center;
+}
+
+.file-input {
+  display:none;
+}
+
+.upload-btn{
+  transform: scale(2);
+  border: none;
+  margin-right: 15px;
+}
+
+.file-upload{
+  margin: auto;
+}

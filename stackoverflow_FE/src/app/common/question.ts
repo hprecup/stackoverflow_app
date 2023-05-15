@@ -8,6 +8,9 @@ export class Question {
               public creationDateTime: Date,
               public tagNames: string[],
               public user: User,
-              public voteCount: number) {
+              public voteCount: number,
+              public canBeModified: boolean,
+              public canBeVoted: boolean,
+              public voteType: string) {
   }
 }

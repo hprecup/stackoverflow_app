@@ -1,5 +1,6 @@
 package com.stackoverflow.project.Stackoverflow.dto;
 
+import com.stackoverflow.project.Stackoverflow.model.VoteType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,5 +23,10 @@ public class RequestAnswerDTO {
 
     private Long voteCount;
 
+    private Boolean canBeModified;
+
+    private Boolean canBeVoted;
+
+    private VoteType voteType;
 
 }

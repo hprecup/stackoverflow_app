@@ -1,7 +1,10 @@
 package com.stackoverflow.project.Stackoverflow.service.impl;
 
+import com.stackoverflow.project.Stackoverflow.dto.RequestUserDTO;
 import com.stackoverflow.project.Stackoverflow.dto.UserDTO;
 import com.stackoverflow.project.Stackoverflow.mapper.UserMapper;
+import com.stackoverflow.project.Stackoverflow.model.UserRole;
+import com.stackoverflow.project.Stackoverflow.repository.UserRoleRepository;
 import lombok.AllArgsConstructor;
 import com.stackoverflow.project.Stackoverflow.model.User;
 import com.stackoverflow.project.Stackoverflow.repository.UserRepository;
@@ -10,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +23,8 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     private UserMapper userMapper;
+
+    private UserRoleRepository userRoleRepository;
 
     public List<User> getAllUsers(){
         return userRepository.findAll();
@@ -60,5 +66,22 @@ public class UserServiceImpl implements UserService {
             return new ResponseEntity(retrievedUser.get(), HttpStatus.OK);
         }
         return new ResponseEntity(null, HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    public List<RequestUserDTO> getRequestUsers() {
+        List<User> users = userRepository.findAll();
+        List<RequestUserDTO> requestUsers = new ArrayList<>();
+        for(User user : users) {
+            RequestUserDTO requestUserDTO = new RequestUserDTO();
+            userMapper.userToRequestUserDTO(requestUserDTO, user);
+            List<String> requestUserRoleNames = new ArrayList<>();
+            for(UserRole userRole : user.getRoles()){
+                requestUserRoleNames.add(userRole.getRole().getName().name());
+            }
+            requestUserDTO.setRoleNames(requestUserRoleNames);
+            requestUsers.add(requestUserDTO);
+        }
+        return requestUsers;
     }
 }

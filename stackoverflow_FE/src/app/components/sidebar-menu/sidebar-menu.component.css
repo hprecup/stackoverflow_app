@@ -2,6 +2,11 @@ mat-sidenav-container {
   height: 100%;
 }
 
+h2{
+  text-align: center;
+  margin-top: 10px;
+}
+
 mat-sidenav {
   padding: 10px;
   border-radius: 10px;
@@ -15,6 +20,10 @@ mat-sidenav {
 mat-sidenav-container {
   padding-right: 20px;
   background-color: rgb(225, 225, 225);
+}
+
+mat-sidenav::-webkit-scrollbar {
+  display: none;
 }
 
 mat-list-item {
@@ -34,3 +43,20 @@ h1:hover {
   background-color: darkorange;
   cursor: pointer;
 }
+
+button {
+  border: none;
+  background-color: tan;
+  transform: scale(2);
+  margin-right: 15px;
+}
+
+.logout {
+  position: absolute;
+  bottom: 15px;
+}
+
+span:hover {
+  cursor: pointer;
+}
+

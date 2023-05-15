@@ -16,6 +16,8 @@ export class SearchBarComponent {
 
   searchString: string = "";
 
+  username: string = JSON.parse(sessionStorage.getItem("currentUser")!).username;
+
   constructor(private route: ActivatedRoute, private router: Router) {
 
   }

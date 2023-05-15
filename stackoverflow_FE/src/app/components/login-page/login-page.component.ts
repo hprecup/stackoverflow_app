@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MaterialModule } from 'src/app/material/material.module';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {ReactiveFormsModule} from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { AppService } from 'src/app/services/app.service';
+import { LoginData } from 'src/app/common/login-data';
 
 @Component({
   standalone: true,
@@ -9,16 +14,41 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./login-page.component.css'],
   imports:[
     MaterialModule,
-    RouterModule
+    RouterModule,
+    ReactiveFormsModule,
+    CommonModule
   ]
 })
 export class LoginPageComponent implements OnInit{
   hidePassword: boolean = true;
 
-  // FAC CU FORM CONTROL PENTRU VALIDATORI LA FIECARE CAMP SI CU ERROR MESSAGES
+  loginFormGroup!: FormGroup;
+
+  constructor(private fb: FormBuilder, private router: Router, private appService: AppService) {
+  }
 
   ngOnInit(): void {
     this.hidePassword = true;
+    this.loginFormGroup = new FormGroup({
+      username: new FormControl('', [Validators.required]),
+      password: new FormControl('', [Validators.required]),
+    })
+  }
+
+  loginUser() {
+    if(this.loginFormGroup.valid){
+      const username = this.loginFormGroup.get('username')?.value;
+      const password = this.loginFormGroup.get('password')?.value;
+      this.appService.authenticate(new LoginData(username, password)).subscribe({
+        next: (data: any) => {
+          if(data !== null) {
+            this.router.navigateByUrl('main');
+          }
+          console.log(data)
+        },
+        error: (err: Error) => console.log(err.message)
+      });
+    }
   }
 
 }

@@ -10,6 +10,7 @@ import com.stackoverflow.project.Stackoverflow.model.User;
 import com.stackoverflow.project.Stackoverflow.repository.AnswerRepository;
 import com.stackoverflow.project.Stackoverflow.repository.QuestionRepository;
 import com.stackoverflow.project.Stackoverflow.repository.UserRepository;
+import com.stackoverflow.project.Stackoverflow.security.SecurityUtils;
 import com.stackoverflow.project.Stackoverflow.service.AnswerService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -80,23 +81,25 @@ public class AnswerServiceImpl implements AnswerService {
 
 
     public RequestAnswerDTO insertAnswer(Long questionId, InsertAnswerDTO insertAnswerDTO) {
+        User loggedUser = SecurityUtils.getLoggedUser();
         Answer answer = new Answer();
         answerMapper.insertAnswerDTOtoAnswer(answer, insertAnswerDTO);
-        Optional<User> optionalUser = userRepository.findById(insertAnswerDTO.getAuthorId());
-        User retrievedUser = optionalUser.get();
         Optional<Question> optionalQuestion = questionRepository.findById(questionId);
         Question retrievedQuestion = optionalQuestion.get();
         answer.setQuestion(retrievedQuestion);
-        answer.setUser(retrievedUser);
+        answer.setUser(loggedUser);
         answer.setCreationDateTime(LocalDateTime.now());
         answer.setVoteCount(Long.valueOf(0));
         answerRepository.save(answer);
         RequestAnswerDTO requestAnswer = new RequestAnswerDTO();
         answerMapper.answerToRequestAnswerDTO(requestAnswer, answer);
+        requestAnswer.setCanBeModified(true);
+        requestAnswer.setCanBeVoted(false);
         return requestAnswer;
     }
 
     public RequestAnswerDTO editAnswer(Long id, String newText) {
+        User loggedUser = SecurityUtils.getLoggedUser();
         Optional<Answer> optionalAnswer = answerRepository.findById(id);
         Answer retrievedAnswer = optionalAnswer.get();
         if(! optionalAnswer.isEmpty()) {
@@ -104,6 +107,8 @@ public class AnswerServiceImpl implements AnswerService {
             answerRepository.save(retrievedAnswer);
             RequestAnswerDTO requestAnswer = new RequestAnswerDTO();
             answerMapper.answerToRequestAnswerDTO(requestAnswer, retrievedAnswer);
+            requestAnswer.setCanBeModified(loggedUser.getId() == retrievedAnswer.getUser().getId());
+            requestAnswer.setCanBeVoted(!requestAnswer.getCanBeModified());
             return requestAnswer;
         }
         return null;

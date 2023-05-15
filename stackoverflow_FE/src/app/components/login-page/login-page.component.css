@@ -36,6 +36,7 @@ h1{
   font-size: 25px;
   background-color: orange;
   padding: 5px;
+  border-radius: 5px;
 }
 
 a {

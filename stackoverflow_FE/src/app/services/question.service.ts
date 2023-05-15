@@ -48,11 +48,6 @@ export class QuestionService {
     return this.httpClient.put<Question>(editUrl, newText);
   }
 
-  // deleteQuestion(id: number) : Observable<any> {
-  //   const deleteUrl = `${this.baseUrl}/delete/${id}`;
-  //   return this.httpClient.delete(deleteUrl);
-  // }
-
   async deleteQuestion(id: number): Promise<any> {
     const deleteUrl = `${this.baseUrl}/delete/${id}`;
     try {
@@ -63,7 +58,7 @@ export class QuestionService {
     }
   }
 
-  searchQuestion(searchString: string): Observable<Question[]>{
+  searchQuestion(searchString: string): Observable<Question[]> {
     const searchUrl = `${this.baseUrl}/search/${searchString}`;
     return this.httpClient.get<Question[]>(searchUrl);
   }

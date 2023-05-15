@@ -16,7 +16,6 @@ public class JwtTokenUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenUtil.class);
 
     public String generateToken(User user) {
-        //String username = authentication.getName();
         Map<String, Object> claims = new HashMap<>();
 
         return Jwts.builder()

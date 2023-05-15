@@ -12,5 +12,4 @@ public class InsertAnswerDTO {
 
     private String picture;
 
-    private Long authorId;
 }

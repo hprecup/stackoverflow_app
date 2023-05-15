@@ -3,6 +3,7 @@ package com.stackoverflow.project.Stackoverflow.controller;
 import com.stackoverflow.project.Stackoverflow.dto.AuthLoginDTO;
 import com.stackoverflow.project.Stackoverflow.dto.AuthResponse;
 import com.stackoverflow.project.Stackoverflow.model.User;
+import com.stackoverflow.project.Stackoverflow.model.UserRole;
 import com.stackoverflow.project.Stackoverflow.security.JwtTokenUtil;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -34,8 +38,12 @@ public class AuthController {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
             User user = (User) authentication.getPrincipal();
+            List<String> userRoles = new ArrayList<String>();
+            for(UserRole userRole : user.getRoles()){
+                userRoles.add(userRole.getRole().getName().name());
+            }
             String accessToken = jwtTokenUtil.generateToken(user);
-            AuthResponse response = new AuthResponse(user.getUsername(), accessToken);
+            AuthResponse response = new AuthResponse(user.getUsername(), userRoles, accessToken);
 
             return ResponseEntity.ok().body(response);
 
@@ -44,9 +52,10 @@ public class AuthController {
         }
     }
 
-//    @PostMapping("/logout")
-//    public ResponseEntity<?> logout() {
-//
-//    }
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout() {
+        SecurityContextHolder.clearContext();
+        return ResponseEntity.noContent().build();
+    }
 
 }

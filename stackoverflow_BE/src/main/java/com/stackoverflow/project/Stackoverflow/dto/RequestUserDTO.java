@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,5 +20,9 @@ public class RequestUserDTO {
 
     private String email;
 
-    private Long score;
+    private Float score;
+
+    private List<String> roleNames;
+
+//    private Boolean canBeBannedByLoggedUser;
 }

@@ -27,4 +27,7 @@ public class Question extends UserContent {
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<QuestionTag> tags= new ArrayList<>();
+
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<QuestionVote> questionVotes = new ArrayList<>();
 }

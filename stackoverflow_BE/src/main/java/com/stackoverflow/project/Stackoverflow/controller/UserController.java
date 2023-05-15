@@ -1,5 +1,6 @@
 package com.stackoverflow.project.Stackoverflow.controller;
 
+import com.stackoverflow.project.Stackoverflow.dto.RequestUserDTO;
 import com.stackoverflow.project.Stackoverflow.dto.UserDTO;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -43,5 +44,10 @@ public class UserController {
         return userService.deleteUser(id);
     }
 
+
+    @GetMapping("/getAll")
+    public List<RequestUserDTO> getRequestUsers() {
+        return userService.getRequestUsers();
+    }
 
 }

@@ -17,6 +17,8 @@ import { User } from 'src/app/common/user';
 })
 export class UserListComponent implements OnInit {
 
+  userIsAdmin: boolean = JSON.parse(sessionStorage.getItem("currentUser")!).userRoles.includes('MODERATOR');
+
   constructor(private route: ActivatedRoute, private userService: UserService) {
 
   }
@@ -32,7 +34,10 @@ export class UserListComponent implements OnInit {
   fetchData() {
     console.log("users")
     this.userService.getUserList().subscribe(
-      users => this.users = users
+      users => {
+        console.log(users)
+        this.users = users
+      }
     );
   }
 

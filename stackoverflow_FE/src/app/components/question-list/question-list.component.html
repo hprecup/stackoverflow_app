@@ -2,15 +2,15 @@
   <div class="half-width filters">
     <div>
       <p>
-        <mat-checkbox [formControl]="disableSelect">Only my questions</mat-checkbox>
+        <mat-checkbox [formControl]="onlyMyQuestions" (click)="filterQuestions(tagFilter.value, userFilter.value)">Only my questions</mat-checkbox>
       </p>
     </div>
 
     <div class="input">
       <mat-form-field>
         <mat-label>Filter by tag</mat-label>
-        <mat-select [disabled]="disableSelect.value" (selectionChange)="filterByTag($event)">
-          <mat-option *ngFor="let tag of filterTags" value={{tag}} selected>{{tag}}</mat-option>
+        <mat-select #tagFilter [disabled]="onlyMyQuestions.value" [(value)]="selectedTag" (selectionChange)="filterQuestions($event.value, userFilter.value)">
+          <mat-option *ngFor="let tag of filterTags" value={{tag}}>{{tag}}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -18,10 +18,8 @@
     <div class="input">
       <mat-form-field>
         <mat-label>Filter by user</mat-label>
-        <mat-select [disabled]="disableSelect.value">
-          <mat-option value="" selected></mat-option>
-          <mat-option value="option1">User 1</mat-option>
-          <mat-option value="option2">User 2</mat-option>
+        <mat-select #userFilter [disabled]="onlyMyQuestions.value" [(value)]="selectedUsername" (selectionChange)="filterQuestions(tagFilter.value, $event.value)">
+          <mat-option *ngFor="let username of filterUsernames" value={{username}}>{{username}}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -41,64 +39,78 @@
       </mat-card-title>
     </mat-card-header>
 
-    <mat-card-content class="question-form">
-      <mat-form-field>
-        <mat-label>Title</mat-label>
-        <input #questionTitle matInput required placeholder="Title">
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Text</mat-label>
-        <textarea matInput placeholder="Text..."
-                  cdkTextareaAutosize
-                  cdkAutosizeMinRows="1"
-                  cdkAutosizeMaxRows="8"
-                  required #questionText></textarea>
-      </mat-form-field>
-
-      <p class = "tag-error">......Add image component</p>
-
-      <!-- <mat-form-field appearance="fill">
-        <mat-label>Tags</mat-label>
-        <mat-select [formControl]="tagsFC" multiple>
-          <mat-option *ngFor="let tag of tags" [value]="tag.id">{{tag.tagName}}</mat-option>
-        </mat-select>
-      </mat-form-field> -->
-
-      <div class="tag-select">
-        <div style="width:90%">
-          <mat-form-field class="tag-form-field">
-            <mat-label>Tags</mat-label>
-            <mat-select multiple required [(ngModel)]="selectedTags">
-              <mat-option *ngFor="let tag of tags" [value]="tag.id">{{tag.tagName}}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="plus-button">
-          <button mat-raised-button (click)="toggleTagInsert()">New</button>
-        </div>
-      </div>
-
-      <div class="tag-insert" *ngIf="enableInsertTag">
+    <mat-card-content>
+      <form [formGroup]="questionInsertFormGroup" class="question-form">
         <mat-form-field>
-          <mat-label>New Tag</mat-label>
-          <input #tagInput matInput placeholder="Tag name" required>
+          <mat-label>Title</mat-label>
+          <input formControlName="title" matInput required placeholder="Title">
+          <mat-error *ngIf="questionInsertFormGroup.get('title')?.hasError('required')">
+              Title is required
+          </mat-error>
         </mat-form-field>
 
-        <button mat-raised-button (click)="addTag(tagInput.value)" class="insert-btn">Insert</button>
-      </div>
+        <mat-form-field>
+          <mat-label>Text</mat-label>
+          <textarea matInput placeholder="Text..."
+                    cdkTextareaAutosize
+                    cdkAutosizeMinRows="1"
+                    cdkAutosizeMaxRows="8"
+                    required
+                    formControlName="text"></textarea>
+          <mat-error *ngIf="questionInsertFormGroup.get('text')?.hasError('required')">
+            Text is required
+          </mat-error>
+        </mat-form-field>
 
-      <p *ngIf="!validTag" class="error">Tag name incorrect or it already exists !</p>
-      <p *ngIf="!validNewQuestion" class="error">Fields from above must be completed !</p>
+        <input class="file-input" type="file" (change)="onFileSelected($event)" #fileUpload>
+        <div class="file-upload">
+          <button class="upload-btn" (click)="fileUpload.click()">
+            <i class="bi bi-images"></i>
+          </button>
+          <span *ngIf="fileName===''" class="error">A question photo must be selected</span>
+          <span *ngIf="fileName!==''">{{fileName}}</span>
+        </div>
 
-      <div class="add-question-button">
-        <button mat-raised-button (click)="insertQuestion(questionTitle.value, questionText.value)">Submit</button>
-      </div>
+        <div class="tag-select">
+          <div style="width:90%">
+            <mat-form-field class="tag-form-field">
+              <mat-label>Tags</mat-label>
+              <mat-select multiple required formControlName="tags">
+                <mat-option *ngFor="let tag of tags" [value]="tag.id">{{tag.tagName}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="questionInsertFormGroup.get('tags')?.hasError('required')">
+                One or more tags are required
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="plus-button">
+            <button mat-raised-button (click)="toggleTagInsert()">New</button>
+          </div>
+        </div>
+        <div class="tag-insert" *ngIf="enableInsertTag">
+            <div>
+              <mat-form-field style="margin-bottom: -10px">
+                <mat-label>New Tag</mat-label>
+                <input [formControl]="newTag" matInput placeholder="Tag name">
+              </mat-form-field>
+              <mat-error *ngIf="newTag.errors?.['pattern']">
+                Tag name cannot contain spaces
+              </mat-error>
+            </div>
+            <button mat-raised-button (click)="addTag()" class="insert-btn">Insert</button>
+        </div>
+
+        <div class="add-question-button">
+          <button mat-raised-button (click)="insertQuestion()">Submit</button>
+        </div>
+      </form>
     </mat-card-content>
   </mat-card>
 </div>
 
-<div *ngFor="let question of questions">
+<h2 *ngIf="displayedQuestions.length === 0">There are no questions to be displayed</h2>
+
+<div *ngFor="let question of displayedQuestions">
     <mat-card routerLink="./{{question.id}}" routerLinkActive="active-link" class="question-card">
       <mat-card-header>
         <mat-card-title-group>

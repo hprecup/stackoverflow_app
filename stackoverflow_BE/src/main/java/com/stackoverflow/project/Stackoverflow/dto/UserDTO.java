@@ -34,5 +34,5 @@ public class UserDTO {
     private String password;
 
     @NotNull(message = "score must not be null")
-    private Long score;
+    private Float score;
 }

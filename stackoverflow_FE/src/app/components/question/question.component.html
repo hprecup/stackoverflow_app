@@ -1,11 +1,11 @@
-<div class="questionCard">
+<div class="questionCard"> <!-- *ngIf="!loading"-->
   <mat-card>
     <mat-card-header>
       <mat-card-title-group>
         <p style="font-style: italic">{{question.creationDateTime| date:'medium'}}</p>
         <mat-card-title>{{question.title}}</mat-card-title>
         <mat-card-subtitle>
-          <p>{{question.user.username}}</p>
+          <p>{{question.user.username}} ({{question.user.score}} points)</p>
         </mat-card-subtitle>
       </mat-card-title-group>
     </mat-card-header>
@@ -22,9 +22,8 @@
                   cdkTextareaAutosize
                   cdkAutosizeMinRows="1"
                   cdkAutosizeMaxRows="8"
-                  disabled={{disableQuestionEditing}}
-                  [ngClass]="{'edit-question': !disableQuestionEditing}"
                   [(ngModel)] = "questionText"
+                  disabled={{disableQuestionEditing}}
           >{{questionText}}</textarea>
         <button mat-raised-button *ngIf="!disableQuestionEditing" (click)="editQuestion(questionText)" color="success" class="confirm-button">Confirm</button>
       </div>
@@ -35,15 +34,17 @@
 
     <mat-card-actions>
       <button mat-raised-button class="edit add-answer" (click)="toggleAnswerInsert()">Add Answer</button>
-      <button mat-raised-button color="primary" class="edit" (click)="toggleQuestionEdit()">Edit</button>
-      <button mat-raised-button color="warn" class="edit" (click)="deleteQuestion()">Delete</button>
+      <button mat-raised-button color="primary" class="edit" *ngIf="question.canBeModified" (click)="toggleQuestionEdit()">Edit</button>
+      <button mat-raised-button color="warn" class="edit" *ngIf="question.canBeModified" (click)="deleteQuestion()">Delete</button>
       <div class="like-buttons">
-        <button mat-raised-button class="vote">
-          <mat-icon>thumb_up_alt</mat-icon>
-        </button>
-        <button mat-raised-button class="vote">
-          <mat-icon>thumb_down_alt</mat-icon>
-        </button>
+        <div *ngIf="question.canBeVoted">
+          <button mat-raised-button class="vote" [ngClass]="{'upvote' : question.voteType === 'UPVOTE'}" (click)="upvoteQuestion()">
+            <mat-icon class="vote-icon">thumb_up_alt</mat-icon>
+          </button>
+          <button mat-raised-button class="vote" [ngClass]="{'downvote' : question.voteType === 'DOWNVOTE'}" (click)="downvoteQuestion()">
+            <mat-icon class="vote-icon">thumb_down_alt</mat-icon>
+          </button>
+        </div>
         <p class="vote-count">Vote count: {{question.voteCount}}</p>
       </div>
     </mat-card-actions>
@@ -59,19 +60,33 @@
     </mat-card-header>
 
     <mat-card-content class="answer-form">
-        <p>Add answer image...</p>
+      <form [formGroup]="answerInsertFormGroup" class="answer-form">
+        <input class="file-input" type="file" (change)="onFileSelected($event)" #fileUpload>
+        <div class="file-upload">
+          <button class="upload-btn" (click)="fileUpload.click()">
+            <i class="bi bi-images"></i>
+          </button>
+          <span *ngIf="fileName===''" class="error">An answer photo must be selected</span>
+          <span *ngIf="fileName!==''">{{fileName}}</span>
+        </div>
 
         <mat-form-field>
           <mat-label>Answer</mat-label>
-          <textarea matInput placeholder="Answer..."
+          <textarea matInput placeholder="Text..."
                     cdkTextareaAutosize
                     cdkAutosizeMinRows="1"
                     cdkAutosizeMaxRows="8"
-                    #answerText></textarea>
+                    required
+                    formControlName="answerText"></textarea>
+          <mat-error *ngIf="answerInsertFormGroup.get('answerText')?.hasError('required')">
+            Answer text is required
+          </mat-error>
         </mat-form-field>
+
         <div class="answer-button">
-          <button mat-raised-button (click)="insertAnswer(answerText.value)">Submit</button>
+          <button mat-raised-button (click)="insertAnswer()">Submit</button>
         </div>
+      </form>
     </mat-card-content>
   </mat-card>
 </div>
@@ -81,9 +96,8 @@
     <mat-card-header>
       <mat-card-title-group>
         <p style="font-style: italic">{{answerDate | date:'medium'}}</p>
-        <!-- <mat-card-title>{{}}</mat-card-title> -->
         <mat-card-subtitle>
-          {{answer.user.username}}
+          {{answer.user.username}} ({{answer.user.score}} points)
         </mat-card-subtitle>
         <!-- <img mat-card-lg-image src="assets/images/demo_photo.jpg" > -->
       </mat-card-title-group>
@@ -96,28 +110,27 @@
                   disabled = {{disableAnswerEditing}}
                   cdkAutosizeMinRows="1"
                   cdkAutosizeMaxRows="8"
-                  disabled={{disableQuestionEditing}}
                   #answerText
-        >
-          aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa{{answer.text}}
-        </textarea>
+                  >{{answer.text}}</textarea>
         <button mat-raised-button *ngIf="!this.disableAnswerEditing" (click)="editAnswer(answerText.value, answer.id)">Confirm</button>
       </div>
       <div class="answer-question-img">
-        <img mat-card-lg-image src="assets/images/demo_photo.jpg">
+        <img mat-card-lg-image src={{answer.picture}}>
       </div>
     </mat-card-content>
 
     <mat-card-actions>
-      <button mat-raised-button color="primary" class="edit" (click)="toggleAnswerEdit()">Edit</button>
-      <button mat-raised-button color="warn" class="edit" (click)="deleteAnswer(answer.id)">Delete</button>
+      <button mat-raised-button color="primary" class="edit" *ngIf="answer.canBeModified" (click)="toggleAnswerEdit()">Edit</button>
+      <button mat-raised-button color="warn" class="edit" *ngIf="answer.canBeModified" (click)="deleteAnswer(answer.id)">Delete</button>
       <div class="like-buttons">
-        <button mat-raised-button class="vote">
-          <mat-icon>thumb_up_alt</mat-icon>
-        </button>
-        <button mat-raised-button class="vote">
-          <mat-icon>thumb_down_alt</mat-icon>
-        </button>
+        <div *ngIf="answer.canBeVoted">
+          <button mat-raised-button class="vote" [ngClass]="{'upvote' : answer.voteType === 'UPVOTE'}" (click)="upvoteAnswer(answer.id)">
+            <mat-icon class="vote-icon">thumb_up_alt</mat-icon>
+          </button>
+          <button mat-raised-button class="vote" [ngClass]="{'downvote' : answer.voteType === 'DOWNVOTE'}" (click)="downvoteAnswer(answer.id)">
+            <mat-icon class="vote-icon">thumb_down_alt</mat-icon>
+          </button>
+        </div>
         <p class="vote-count">Vote count: {{answer.voteCount}}</p>
       </div>
     </mat-card-actions>

@@ -33,13 +33,14 @@ public class WebSecurityConfig{
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
+//        auth.requestMatchers("/user/**").hasAuthority("MODERATOR")
         http
-                .csrf(csrf -> csrf.disable())
-                .authorizeRequests()
-                .requestMatchers("/auth/login", "/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .httpBasic();
+                .cors().and().csrf().disable()
+                .authorizeHttpRequests(auth -> {
+                    auth
+                        .requestMatchers("/auth/login").permitAll()
+                        .anyRequest().authenticated();
+                });
 
         http.exceptionHandling()
                 .authenticationEntryPoint(
@@ -67,29 +68,6 @@ public class WebSecurityConfig{
             }
         };
     }
-
-//    @Bean
-//    public InMemoryUserDetailsManager userDetailsManager() {
-//        UserDetails user = User
-//                            .withUsername("user")
-//                            .password("user")
-//                            //.roles("")
-//                            .build();
-//        return new InMemoryUserDetailsManager(user);
-//    }
-
-
-
-//    @Bean
-//    public InMemoryUserDetailsManager userDetailsService() {
-//        UserDetails user = User.withDefaultPasswordEncoder()
-//                .username("user")
-//                .password("user")
-//                //.roles("USER")
-//                .build();
-//        return new InMemoryUserDetailsManager(user);
-//    }
-
 
     @Bean
     public AuthenticationManager authenticationManager(

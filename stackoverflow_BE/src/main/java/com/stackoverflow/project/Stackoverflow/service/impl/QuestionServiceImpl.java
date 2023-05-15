@@ -1,26 +1,21 @@
 package com.stackoverflow.project.Stackoverflow.service.impl;
 
-import com.stackoverflow.project.Stackoverflow.dto.InsertQuestionDTO;
-import com.stackoverflow.project.Stackoverflow.dto.QuestionDTO;
-import com.stackoverflow.project.Stackoverflow.dto.RequestAnswerDTO;
-import com.stackoverflow.project.Stackoverflow.dto.RequestQuestionDTO;
+import com.stackoverflow.project.Stackoverflow.dto.*;
 import com.stackoverflow.project.Stackoverflow.mapper.AnswerMapper;
 import com.stackoverflow.project.Stackoverflow.mapper.QuestionMapper;
 import com.stackoverflow.project.Stackoverflow.model.*;
-import com.stackoverflow.project.Stackoverflow.repository.QuestionRepository;
-import com.stackoverflow.project.Stackoverflow.repository.QuestionTagRepository;
-import com.stackoverflow.project.Stackoverflow.repository.TagRepository;
-import com.stackoverflow.project.Stackoverflow.repository.UserRepository;
+import com.stackoverflow.project.Stackoverflow.repository.*;
+import com.stackoverflow.project.Stackoverflow.security.SecurityUtils;
 import com.stackoverflow.project.Stackoverflow.service.QuestionService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @AllArgsConstructor
 public class QuestionServiceImpl implements QuestionService {
@@ -29,7 +24,9 @@ public class QuestionServiceImpl implements QuestionService {
 
     private TagRepository tagRepository;
 
-    private QuestionTagRepository questionTagRepository;
+    private QuestionVoteRepository questionVoteRepository;
+
+    private AnswerVoteRepository answerVoteRepository;
     private QuestionMapper questionMapper;
 
     private AnswerMapper answerMapper;
@@ -104,6 +101,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     public List<RequestAnswerDTO> getQuestionAnswers(Long id) {
+        User loggedUser = SecurityUtils.getLoggedUser();
         Optional<Question> question = questionRepository.findById(id);
         if(!question.isEmpty()) {
             Question retrievedQuestion = question.get();
@@ -111,8 +109,16 @@ public class QuestionServiceImpl implements QuestionService {
             for(Answer answer : retrievedQuestion.getAnswers()) {
                 RequestAnswerDTO requestAnswerDTO = new RequestAnswerDTO();
                 answerMapper.answerToRequestAnswerDTO(requestAnswerDTO, answer);
+                requestAnswerDTO.setCanBeModified(loggedUser.getUsername().equals(answer.getUser().getUsername()) ||
+                        SecurityUtils.isUserAdmin(loggedUser));
+                requestAnswerDTO.setCanBeVoted(!loggedUser.getId().equals(answer.getUser().getId()));
+                answerVoteRepository.findAnswerVoteByLoggedUser(loggedUser, answer).ifPresent(
+                        answerVote -> requestAnswerDTO.setVoteType(answerVote.getVoteType())
+                );
                 requestAnswers.add(requestAnswerDTO);
             }
+            Comparator<RequestAnswerDTO> compareByVoteCount = Comparator.comparing(RequestAnswerDTO::getVoteCount).reversed();
+            Collections.sort(requestAnswers, compareByVoteCount);
             return requestAnswers;
         }
         return null;
@@ -131,22 +137,29 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     public RequestQuestionDTO getRequestQuestion(Long id) {
+        User loggedUser = SecurityUtils.getLoggedUser();
         Optional<Question> question = questionRepository.findById(id);
         if (!question.isEmpty()) {
             Question retrievedQuestion = question.get();
             RequestQuestionDTO requestQuestion = new RequestQuestionDTO();
             questionMapper.questionToRequestQuestionDTO(requestQuestion, retrievedQuestion);
             requestQuestion.setTagNames(getTagNames(retrievedQuestion));
+            requestQuestion.setCanBeModified(loggedUser.getId().equals(retrievedQuestion.getUser().getId()) ||
+                    SecurityUtils.isUserAdmin(loggedUser));
+            requestQuestion.setCanBeVoted(!loggedUser.getId().equals(retrievedQuestion.getUser().getId()));
+            questionVoteRepository.findQuestionVoteByLoggedUser(loggedUser, retrievedQuestion).ifPresent(
+                    questionVote ->  requestQuestion.setVoteType(questionVote.getVoteType()));
             return requestQuestion;
         }
         return null;
     }
 
     public RequestQuestionDTO insertQuestion(InsertQuestionDTO insertQuestionDTO) {
+        User loggedUser = SecurityUtils.getLoggedUser();
         Question question = new Question();
         questionMapper.insertQuestionDTOtoQuestion(question, insertQuestionDTO);
         question.setVoteCount(Long.valueOf(0));
-        question.setUser(userRepository.findById(insertQuestionDTO.getAuthorId()).get());
+        question.setUser(loggedUser);
         List<String> tagNames = new ArrayList<>();
         for(Long tagId : insertQuestionDTO.getTagIds()){
             Tag retrievedTag = tagRepository.findById(tagId).get();
@@ -159,10 +172,13 @@ public class QuestionServiceImpl implements QuestionService {
         RequestQuestionDTO requestQuestionDTO = new RequestQuestionDTO();
         questionMapper.questionToRequestQuestionDTO(requestQuestionDTO, question);
         requestQuestionDTO.setTagNames(tagNames);
+        requestQuestionDTO.setCanBeVoted(false);
+        requestQuestionDTO.setCanBeModified(true);
         return requestQuestionDTO;
     }
 
     public RequestQuestionDTO editQuestion(Long id, String editedQuestionText) {
+        User loggedUser = SecurityUtils.getLoggedUser();
         Optional<Question> optionalQuestion = questionRepository.findById(id);
         if(! optionalQuestion.isEmpty()) {
             Question question = optionalQuestion.get();
@@ -170,6 +186,8 @@ public class QuestionServiceImpl implements QuestionService {
             questionRepository.save(question);
             RequestQuestionDTO requestQuestionDTO = new RequestQuestionDTO();
             questionMapper.questionToRequestQuestionDTO(requestQuestionDTO, question);
+            requestQuestionDTO.setCanBeModified(loggedUser.getId() == question.getUser().getId());
+            requestQuestionDTO.setCanBeVoted(!requestQuestionDTO.getCanBeModified());
             return requestQuestionDTO;
         }
         return null;

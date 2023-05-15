@@ -9,17 +9,20 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import {MatSidenavModule} from '@angular/material/sidenav';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { Routes, RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { QuestionListComponent } from './components/question-list/question-list.component';
 import { QuestionComponent } from './components/question/question.component';
 import { LoginPageComponent } from './components/login-page/login-page.component';
 import { UserListComponent } from './components/user-list/user-list.component';
+import { TokenInterceptorService } from './services/token-interceptor.service';
+import { authGuard, loginGuard } from './services/auth.guard';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 const routes: Routes = [
-  {path: 'login', component: LoginPageComponent},
-  {path: 'main', component: SidebarMenuComponent,
+  {path: 'login', component: LoginPageComponent, canActivate: [loginGuard]},
+  {path: 'main', component: SidebarMenuComponent, canActivate: [authGuard],
     children: [
       {path: 'questions', component: QuestionListComponent},
       {path: 'questions/:id',component: QuestionComponent, pathMatch: 'full'},
@@ -28,6 +31,7 @@ const routes: Routes = [
     ]
   },
   {path: '', redirectTo: '/login', pathMatch: 'full'},
+  {path: '**', component: PageNotFoundComponent, canActivate: [authGuard]},
   {path: '**', redirectTo: '/login', pathMatch: 'full'},
 ];
 
@@ -53,9 +57,16 @@ const routes: Routes = [
       onSameUrlNavigation: 'reload'
     }),
     LoginPageComponent,
-    UserListComponent
+    UserListComponent,
+    PageNotFoundComponent
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptorService,
+      multi: true,
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

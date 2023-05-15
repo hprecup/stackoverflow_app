@@ -4,31 +4,26 @@ import com.stackoverflow.project.Stackoverflow.mapper.AnswerMapper;
 import com.stackoverflow.project.Stackoverflow.mapper.QuestionMapper;
 import com.stackoverflow.project.Stackoverflow.mapper.TagMapper;
 import com.stackoverflow.project.Stackoverflow.mapper.UserMapper;
+import com.stackoverflow.project.Stackoverflow.model.Answer;
 import com.stackoverflow.project.Stackoverflow.repository.*;
-import com.stackoverflow.project.Stackoverflow.service.AnswerService;
-import com.stackoverflow.project.Stackoverflow.service.QuestionService;
-import com.stackoverflow.project.Stackoverflow.service.TagService;
-import com.stackoverflow.project.Stackoverflow.service.impl.AnswerServiceImpl;
-import com.stackoverflow.project.Stackoverflow.service.impl.QuestionServiceImpl;
+import com.stackoverflow.project.Stackoverflow.service.*;
+import com.stackoverflow.project.Stackoverflow.service.impl.*;
 
-import com.stackoverflow.project.Stackoverflow.service.impl.TagServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.stackoverflow.project.Stackoverflow.service.UserService;
-import com.stackoverflow.project.Stackoverflow.service.impl.UserServiceImpl;
 
 @Configuration
 public class AppConfig {
 
     @Bean
-    public UserService userService(UserRepository userRepository, UserMapper userMapper) {
-        return new UserServiceImpl(userRepository, userMapper);
+    public UserService userService(UserRepository userRepository, UserMapper userMapper, UserRoleRepository userRoleRepository) {
+        return new UserServiceImpl(userRepository, userMapper, userRoleRepository);
     }
 
     @Bean
-    public QuestionService questionService(QuestionRepository questionRepository, UserRepository userRepository,
-                                           TagRepository tagRepository, QuestionTagRepository questionTagRepository, QuestionMapper questionMapper, AnswerMapper answerMapper) {
-        return new QuestionServiceImpl(questionRepository, userRepository, tagRepository, questionTagRepository, questionMapper, answerMapper);
+    public QuestionService questionService(QuestionRepository questionRepository, UserRepository userRepository, TagRepository tagRepository, QuestionVoteRepository questionVoteRepository,
+                                           AnswerVoteRepository answerVoteRepository, QuestionMapper questionMapper, AnswerMapper answerMapper) {
+        return new QuestionServiceImpl(questionRepository, userRepository, tagRepository, questionVoteRepository, answerVoteRepository, questionMapper, answerMapper);
     }
 
     @Bean
@@ -40,5 +35,11 @@ public class AppConfig {
     @Bean
     public TagService tagService(TagRepository tagRepository, TagMapper tagMapper) {
         return new TagServiceImpl(tagRepository, tagMapper);
+    }
+
+    @Bean
+    public VotesService votesService(QuestionVoteRepository questionVoteRepository, AnswerVoteRepository answerVoteRepository, QuestionRepository questionRepository,
+                                     AnswerRepository answerRepository, UserRepository userRepository, QuestionMapper questionMapper, AnswerMapper answerMapper) {
+        return new VotesServiceImpl(questionVoteRepository, answerVoteRepository, questionRepository, answerRepository, userRepository, questionMapper, answerMapper);
     }
 }

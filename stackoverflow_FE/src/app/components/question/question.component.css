@@ -96,6 +96,10 @@ textarea::-webkit-scrollbar{
   display: none;
 }
 
+textarea{
+  box-sizing: content-box;
+}
+
 .edit-question{
   border: black;
 }
@@ -158,4 +162,37 @@ textarea::-webkit-scrollbar{
 .answer-question-img img {
   margin: auto;
   display: block;
+}
+
+.file-input {
+  display:none;
+}
+
+.upload-btn{
+  transform: scale(2);
+  border: none;
+  margin-right: 15px;
+}
+
+.file-upload{
+  margin: auto;
+}
+
+.error{
+  color: red;
+  text-align: center;
+}
+
+.upvote{
+  background-color:black;
+  color:cornflowerblue;
+}
+
+.downvote{
+  background-color: black;
+  color:indianred;
+}
+
+.vote-icon {
+  margin: auto;
 }

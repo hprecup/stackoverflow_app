@@ -1,14 +1,20 @@
 <mat-sidenav-container>
   <mat-sidenav mode = "side" opened>
-    <h1 routerLink="login" routerLinkActive="active-link"><i class="bi bi-stack-overflow"></i>Stackoverflow</h1>
+    <h1 routerLink="/main" routerLinkActive="active-link"><i class="bi bi-stack-overflow"></i>Stackoverflow</h1>
     <mat-nav-list>
       <mat-list-item routerLink="users" routerLinkActive="active-link">Users</mat-list-item>
       <mat-list-item routerLink="questions" routerLinkActive="active-link">Questions</mat-list-item>
     </mat-nav-list>
+    <div class="logout">
+      <button (click)="logoutUser()"><i class="bi bi-box-arrow-left"></i></button>
+      <span (click)="logoutUser()">Logout</span>
+    </div>
   </mat-sidenav>
   <mat-sidenav-content>
 
     <app-search-bar></app-search-bar>
+
+    <h2 *ngIf="noContentMainPage"><i class="bi bi-stack-overflow"></i> Welcome to Stackoverflow !</h2>
 
     <router-outlet></router-outlet>
 

@@ -6,5 +6,8 @@ export class Answer {
               public user: User,
               public picture: string,
               public creationDateTime: Date,
-              public voteCount: number){}
+              public voteCount: number,
+              public canBeModified: boolean,
+              public canBeVoted: boolean,
+              public voteType: string){}
 }

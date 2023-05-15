@@ -11,9 +11,7 @@ public class StackoverflowApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(StackoverflowApplication.class, args);
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		String password = passwordEncoder.encode("user1");
-		System.out.println(password);
+		//System.out.println((new BCryptPasswordEncoder()).encode("admin"));
 	}
 
 }

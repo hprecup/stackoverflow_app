@@ -6,22 +6,30 @@
   </mat-card-header>
   <mat-card-content>
     <div class="form-fields">
-      <mat-form-field appearance="fill">
-        <mat-label>Username</mat-label>
-        <input matInput>
-      </mat-form-field>
+        <form [formGroup]="loginFormGroup">
 
-      <mat-form-field appearance="fill">
-        <mat-label>Password</mat-label>
-        <input matInput [type]="hidePassword ? 'password' : 'text'">
-        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
-          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </button>
-      </mat-form-field>
-      <a routerLink="/main" routerLinkActive="active-link">
-        <button class="login-button" mat-raised-button color="primary">Login</button>
-      </a>
+          <mat-form-field appearance="fill">
+            <mat-label>Username</mat-label>
+            <input matInput formControlName="username" type="text" required>
+            <mat-error *ngIf="loginFormGroup.get('username')?.hasError('required')">
+              Username is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Password</mat-label>
+            <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'">
+            <mat-error *ngIf="loginFormGroup.get('password')?.hasError('required')">
+                Password is required
+            </mat-error>
+            <!-- [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword"-->
+            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <button class="login-button" type="submit" mat-raised-button color="primary" (click)="loginUser()" keyup.enter="loginUser()">Login</button>
+        </form>
     </div>
   </mat-card-content>
 </mat-card>
-<!-- <a routerLink="/main" routerLinkActive="active-link"><button mat-raised-button color="primary" (click)="handleClick()">Intra-n pizda matii</button></a> -->
