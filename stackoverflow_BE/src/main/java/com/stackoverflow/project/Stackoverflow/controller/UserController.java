@@ -50,4 +50,19 @@ public class UserController {
         return userService.getRequestUsers();
     }
 
+    @PutMapping("/ban/{id}")
+    public void banUser(@PathVariable Long id){
+        userService.banUser(id, true);
+    }
+
+    @PutMapping("/unban/{id}")
+    public void unbanUser(@PathVariable Long id){
+        userService.banUser(id, false);
+    }
+
+    @GetMapping("/getLoggedUser")
+    public RequestUserDTO getLoggedUser(){
+        return userService.getLoggedUser();
+    }
+
 }

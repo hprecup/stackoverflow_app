@@ -22,6 +22,8 @@ public class RequestUserDTO {
 
     private Float score;
 
+    private Boolean banned;
+
     private List<String> roleNames;
 
 //    private Boolean canBeBannedByLoggedUser;

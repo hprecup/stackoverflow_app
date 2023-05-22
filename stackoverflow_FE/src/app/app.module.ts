@@ -19,6 +19,7 @@ import { UserListComponent } from './components/user-list/user-list.component';
 import { TokenInterceptorService } from './services/token-interceptor.service';
 import { authGuard, loginGuard } from './services/auth.guard';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { BannedUserDialogComponent } from './components/banned-user-dialog/banned-user-dialog.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginPageComponent, canActivate: [loginGuard]},
@@ -38,7 +39,8 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    BannedUserDialogComponent
   ],
   imports: [
     CommonModule,

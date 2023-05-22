@@ -31,10 +31,14 @@ export class AppService {
           let sessionData: SessionData = {
             username: data.username,
             userRoles: data.userRoles,
-            accessToken: data.accessToken
+            accessToken: data.accessToken,
+            banned: data.banned
           };
-          sessionStorage.setItem("currentUser", JSON.stringify(sessionData));
-          this.currentUser = sessionData;
+          if(data.banned !== true) {
+            sessionStorage.setItem("currentUser", JSON.stringify(sessionData));
+            this.currentUser = sessionData;
+          }
+
           return sessionData;
         }
     )))

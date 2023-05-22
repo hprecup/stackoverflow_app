@@ -3,8 +3,10 @@ package com.stackoverflow.project.Stackoverflow.service.impl;
 import com.stackoverflow.project.Stackoverflow.dto.RequestUserDTO;
 import com.stackoverflow.project.Stackoverflow.dto.UserDTO;
 import com.stackoverflow.project.Stackoverflow.mapper.UserMapper;
+import com.stackoverflow.project.Stackoverflow.model.MailDetail;
 import com.stackoverflow.project.Stackoverflow.model.UserRole;
-import com.stackoverflow.project.Stackoverflow.repository.UserRoleRepository;
+import com.stackoverflow.project.Stackoverflow.security.SecurityUtils;
+import com.stackoverflow.project.Stackoverflow.service.MailService;
 import lombok.AllArgsConstructor;
 import com.stackoverflow.project.Stackoverflow.model.User;
 import com.stackoverflow.project.Stackoverflow.repository.UserRepository;
@@ -24,7 +26,7 @@ public class UserServiceImpl implements UserService {
 
     private UserMapper userMapper;
 
-    private UserRoleRepository userRoleRepository;
+    private MailService mailService;
 
     public List<User> getAllUsers(){
         return userRepository.findAll();
@@ -68,7 +70,6 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity(null, HttpStatus.NOT_FOUND);
     }
 
-    @Override
     public List<RequestUserDTO> getRequestUsers() {
         List<User> users = userRepository.findAll();
         List<RequestUserDTO> requestUsers = new ArrayList<>();
@@ -84,4 +85,33 @@ public class UserServiceImpl implements UserService {
         }
         return requestUsers;
     }
+
+    public void banUser(Long id, boolean ban) {
+        userRepository.findById(id).ifPresentOrElse(
+                user -> {
+                    user.setBanned(ban);
+                    userRepository.save(user);
+                    if(ban == true){
+                        mailService.sendSimpleMail(generateMailDetail(user));
+                    }
+                },
+                () -> {
+                    throw new RuntimeException("User not found");
+                }
+        );
+    }
+
+    public RequestUserDTO getLoggedUser() {
+        RequestUserDTO requestUser = new RequestUserDTO();
+        userMapper.userToRequestUserDTO(requestUser, SecurityUtils.getLoggedUser());
+        return requestUser;
+    }
+
+    private MailDetail generateMailDetail(User user) {
+        return new MailDetail("horeaprecup@yahoo.ro","Info about banned acount",
+                "Hello "+user.getUsername()+"!\nWe are very sorry to inform you that your account has " +
+                        "been banned by one of our moderators.\nIf you would like to know more details, leave us a message at " +
+                        "stackoverflow@customer-support.com.");
+    }
+
 }

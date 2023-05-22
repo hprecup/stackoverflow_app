@@ -32,13 +32,31 @@ export class UserListComponent implements OnInit {
   }
 
   fetchData() {
-    console.log("users")
     this.userService.getUserList().subscribe(
       users => {
         console.log(users)
         this.users = users
       }
     );
+  }
+
+  banUser(userId: number) {
+    this.userService.banUser(userId);
+    this.changeUserStatus(userId);
+  }
+
+  unbanUser(userId: number) {
+    this.userService.unbanUser(userId);
+    this.changeUserStatus(userId);
+  }
+
+  changeUserStatus(userId: number){
+    this.users = this.users.map(user => {
+      if(user.id === userId) {
+        user.banned = !user.banned;
+      }
+      return user;
+    });
   }
 
 }

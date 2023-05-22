@@ -6,6 +6,9 @@ import {ReactiveFormsModule} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AppService } from 'src/app/services/app.service';
 import { LoginData } from 'src/app/common/login-data';
+import {MatDialog} from '@angular/material/dialog'
+import { BannedUserDialogComponent } from '../banned-user-dialog/banned-user-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   standalone: true,
@@ -16,7 +19,8 @@ import { LoginData } from 'src/app/common/login-data';
     MaterialModule,
     RouterModule,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    MatDialogModule
   ]
 })
 export class LoginPageComponent implements OnInit{
@@ -24,7 +28,7 @@ export class LoginPageComponent implements OnInit{
 
   loginFormGroup!: FormGroup;
 
-  constructor(private fb: FormBuilder, private router: Router, private appService: AppService) {
+  constructor(private fb: FormBuilder, private router: Router, private appService: AppService, private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -41,7 +45,9 @@ export class LoginPageComponent implements OnInit{
       const password = this.loginFormGroup.get('password')?.value;
       this.appService.authenticate(new LoginData(username, password)).subscribe({
         next: (data: any) => {
-          if(data !== null) {
+          if(data.banned === true){
+            this.openDialog();
+          } else {
             this.router.navigateByUrl('main');
           }
           console.log(data)
@@ -51,4 +57,8 @@ export class LoginPageComponent implements OnInit{
     }
   }
 
+
+  openDialog(){
+    const dialogRef = this.dialog.open(BannedUserDialogComponent)
+  }
 }

@@ -116,7 +116,7 @@ public class VotesServiceImpl implements VotesService {
                             requestAnswer.setVoteType(VoteType.UPVOTE);
                         } else {
                             setUserScore(retrievedAnswer.getUser(), -VotePoints.ANSWER_DOWNVOTE);
-                            setUserScore(loggedUser, VotePoints.ANSWER_DOWNVOTE_USER);
+                            setUserScore(loggedUser, -VotePoints.ANSWER_DOWNVOTE_USER);
                             setAnswerVoteCount(retrievedAnswer, 1);
                             answerVoteRepository.delete(answerVote);
                         }

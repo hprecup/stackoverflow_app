@@ -42,6 +42,9 @@ public class User implements UserDetails {
     @Column(name = "score")
     private Float score;
 
+    @Column(name = "banned", columnDefinition = "BIT")
+    private Boolean banned;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<UserRole> roles = new ArrayList<>();
 

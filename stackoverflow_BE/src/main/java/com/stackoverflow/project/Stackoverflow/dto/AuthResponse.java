@@ -12,5 +12,7 @@ public class AuthResponse {
 
     private List<String> userRoles;
 
+    private Boolean banned;
+
     private String accessToken;
 }

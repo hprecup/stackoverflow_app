@@ -17,8 +17,9 @@
     </mat-card-header>
 
     <mat-card-actions>
-      <div class="buttons">
-        <button mat-raised-button color="warn" class="vote" *ngIf="userIsAdmin">Ban</button>
+      <div class="buttons" *ngIf="userIsAdmin">
+        <button mat-raised-button color="warn" class="vote" *ngIf="!user.banned" (click)="banUser(user.id)">Ban</button>
+        <button mat-raised-button style="color: green" class="vote"  *ngIf="user.banned" (click)="unbanUser(user.id)">Unban</button>
       </div>
     </mat-card-actions>
   </mat-card>

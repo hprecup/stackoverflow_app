@@ -20,4 +20,8 @@ public interface UserService {
     ResponseEntity<User> deleteUser(Long id);
 
     List<RequestUserDTO> getRequestUsers();
+
+    void banUser(Long id, boolean ban);
+
+    RequestUserDTO getLoggedUser();
 }

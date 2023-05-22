@@ -39,6 +39,7 @@ public class WebSecurityConfig{
                 .authorizeHttpRequests(auth -> {
                     auth
                         .requestMatchers("/auth/login").permitAll()
+                        //.requestMatchers("/user/ban/**", "/user/unban/**").hasRole("ADMIN")
                         .anyRequest().authenticated();
                 });
 

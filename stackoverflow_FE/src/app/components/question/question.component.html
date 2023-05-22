@@ -1,4 +1,4 @@
-<div class="questionCard"> <!-- *ngIf="!loading"-->
+<div class="questionCard" *ngIf="!loading"> <!-- *ngIf="!loading"-->
   <mat-card>
     <mat-card-header>
       <mat-card-title-group>
@@ -28,7 +28,7 @@
         <button mat-raised-button *ngIf="!disableQuestionEditing" (click)="editQuestion(questionText)" color="success" class="confirm-button">Confirm</button>
       </div>
       <div class="answer-question-img">
-        <img mat-card-xl-image src="assets/images/demo_photo.jpg" >
+        <img mat-card-xl-image src={{question.picture}} >
       </div>
     </mat-card-content>
 

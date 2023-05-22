@@ -7,5 +7,6 @@ export class User {
               public username: string,
               public email: string,
               public score: number,
+              public banned: boolean,
               public roles: Role[]) {}
 }

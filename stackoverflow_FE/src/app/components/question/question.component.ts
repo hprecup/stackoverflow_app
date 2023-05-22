@@ -1,4 +1,4 @@
-import { Component, OnInit, importProvidersFrom } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, importProvidersFrom } from '@angular/core';
 import { MaterialModule } from 'src/app/material/material.module';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -10,7 +10,8 @@ import { InsertAnswer } from '../../common/insert-answer';
 import { AnswerService } from '../../services/answer.service';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { VoteService } from 'src/app/services/vote.service';
-import { Observable, finalize, map } from 'rxjs';
+import { Observable, finalize, lastValueFrom, map } from 'rxjs';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   standalone: true,
@@ -26,11 +27,9 @@ import { Observable, finalize, map } from 'rxjs';
 })
 export class QuestionComponent implements OnInit{
 
-  //questionContent: string = "În conformitate cu prevederile legale, cu regulamentele și instrucțiunile în vigoare, revizorul școlar efectua inspecții și anchete, conducea conferința anuală a învățătorilor programată vara, lua parte la diferite manifestări culturale, sărbători legale și naționale etc. Revizorul I.L. Caragiale a procedat în activitatea sa în funcție de condițiile existente în județul Argeș.În perioada revizoratului școlar, dramaturgul Ion Luca Caragiale a locuit în Pitești, în cea mai mare parte a timpului, la hotelul-restaurant „Dacia” din strada Șerban-Vodă, local central de local de categoria I, cu saloane și separeuri în restaurant, cu sală de spectacole, club, bar, cafenea, cofetărie, grădină de vară cu scenă și ring de dans. Localul se situa la nivelul celor similare din București, Hotelul „Dacia” era renumit și prin spectacolele de varietăți susținute de actori profesioniști români și străini.";
-
   answerDate: Date = new Date();
 
-  question: Question = new Question(0, "Not an existing question", "", "", new Date(), [], new User(0, "", "", "", "", 0, []), 0, false, false, "UNVOTED");
+  question: Question = new Question(0, "Not an existing question", "", "", new Date(), [], new User(0, "", "", "", "", 0, false, []), 0, false, false, "UNVOTED");
 
   questionText: string = "";
 
@@ -45,12 +44,14 @@ export class QuestionComponent implements OnInit{
 
   loading: boolean = true;
 
+  loggedUser!: User;
+
   answerInsertFormGroup: FormGroup =  new FormGroup({
     answerText: new FormControl("", [Validators.required])
   });
 
-  constructor(public activatedRoute: ActivatedRoute, private questionService: QuestionService,
-    private answerService: AnswerService, private voteService: VoteService, private router: Router) {
+  constructor(public activatedRoute: ActivatedRoute, private questionService: QuestionService, private answerService: AnswerService,
+    private voteService: VoteService, private userService: UserService, private router: Router, private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
@@ -60,12 +61,14 @@ export class QuestionComponent implements OnInit{
   fetchData() {
     this.fetchQuestion();
     this.fetchAnswers();
+    this.getLoggedUser();
   }
 
   fetchQuestion() {
     const questionId: number = +this.activatedRoute.snapshot.paramMap.get('id')!;
     this.loading = true;
-    this.questionService.getQuestion(questionId)//.pipe(finalize(() => (this.loading = false)))
+    this.questionService.getQuestion(questionId)
+      .pipe(finalize(() => (this.loading = false)))
       .subscribe(
       question => {
         console.log(question)
@@ -83,6 +86,19 @@ export class QuestionComponent implements OnInit{
         this.answers = answers
       }
     );
+  }
+
+  getLoggedUser(): Observable<void>{
+    return new Observable<void>( (observer) => {
+      this.userService.getLoggedUser().subscribe(
+        user => {
+          console.log(user)
+          this.loggedUser = user
+          observer.next();
+          observer.complete();
+        }
+      );
+    })
   }
 
   toggleQuestionEdit() {
@@ -109,11 +125,8 @@ export class QuestionComponent implements OnInit{
         this.fileName = file.name;
         console.log(this.fileName);
         // const formData = new FormData();
-
         // formData.append("thumbnail", file);
-
         // const upload$ = this.http.post("/api/thumbnail-upload", formData);
-
         // upload$.subscribe();
     }
   }
@@ -196,9 +209,11 @@ export class QuestionComponent implements OnInit{
   upvoteAnswer(answerId: number) {
     this.voteService.upvoteAnswer(answerId).subscribe(
       answer => {
-        this.updateUserScoreForQuestion(answer);
-        this.updateUserScoreForAnswers(answer);
-        this.sortAnswers();
+        this.getLoggedUser().subscribe(() => {
+          this.updateUserScoreForQuestion(answer);
+          this.updateUserScoreForAnswers(answer);
+          this.sortAnswers();
+        });
       }
     )
   }
@@ -206,22 +221,24 @@ export class QuestionComponent implements OnInit{
   downvoteAnswer(answerId: number) {
     this.voteService.downvoteAnswer(answerId).subscribe(
       answer => {
-        console.log(answer);
-        this.updateUserScoreForQuestion(answer);
-        this.updateUserScoreForAnswers(answer);
-        this.sortAnswers();
+        this.getLoggedUser().subscribe(() => {
+          this.updateUserScoreForQuestion(answer);
+          this.updateUserScoreForAnswers(answer);
+          this.sortAnswers();
+        });
       }
     )
   }
 
   updateUserScoreForAnswers(answer: Answer) {
-    let currentUsername = JSON.parse(sessionStorage.getItem("currentUser")!).username;
     this.answers = this.answers.map(ans => {
-      if(ans.id === answer.id) {
+      if(ans.id === answer.id){
         return answer;
-      }else if(ans.user.id === answer.user.id) {
+      } else if(ans.user.id === answer.user.id) {
         ans.user.score = answer.user.score;
-        return ans;
+      }
+      else if(ans.user.id === this.loggedUser.id) {
+        ans.user = this.loggedUser;
       }
       return ans;
     });
@@ -230,6 +247,9 @@ export class QuestionComponent implements OnInit{
   updateUserScoreForQuestion(answer: Answer) {
     if(answer.user.id === this.question.user.id){
       this.question.user.score = answer.user.score;
+    }
+    else if(this.question.user.id === this.loggedUser.id) {
+      this.question.user = this.loggedUser;
     }
   }
 

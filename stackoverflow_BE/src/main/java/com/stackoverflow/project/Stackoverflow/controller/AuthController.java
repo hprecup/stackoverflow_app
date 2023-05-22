@@ -43,7 +43,7 @@ public class AuthController {
                 userRoles.add(userRole.getRole().getName().name());
             }
             String accessToken = jwtTokenUtil.generateToken(user);
-            AuthResponse response = new AuthResponse(user.getUsername(), userRoles, accessToken);
+            AuthResponse response = new AuthResponse(user.getUsername(), userRoles, user.getBanned(), accessToken);
 
             return ResponseEntity.ok().body(response);
 

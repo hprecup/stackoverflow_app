@@ -121,7 +121,7 @@
             <p>{{question.user.username}}</p>
             <span style="font-style: italic">{{question.creationDateTime | date:'medium'}}</span>
           </mat-card-subtitle>
-          <img mat-card-sm-image src="assets/images/demo_photo.jpg" >
+          <img mat-card-sm-image src={{question.picture}} >
         </mat-card-title-group>
       </mat-card-header>
 
